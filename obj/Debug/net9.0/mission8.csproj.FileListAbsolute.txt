@@ -209,3 +209,4 @@
 /Users/jared/Documents/IS_413/mission8/obj/Debug/net9.0/mission8.pdb
 /Users/jared/Documents/IS_413/mission8/obj/Debug/net9.0/mission8.genruntimeconfig.cache
 /Users/jared/Documents/IS_413/mission8/obj/Debug/net9.0/ref/mission8.dll
+/Users/jared/Documents/IS_413/mission8/obj/Debug/net9.0/mission8.sourcelink.json

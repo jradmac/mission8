@@ -8,8 +8,9 @@ public class Quadrent1
 {
     [Key]
     public int Q1Id { get; set; }
+    public string Task  { get; set; }
     public DateOnly DataType { get; set; }
-    public int Quadrent { get; set; }
+    public int Quadrant { get; set; }
     
     [ForeignKey("TypeId")]
     public int TypeId { get; set; }

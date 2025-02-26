@@ -1,31 +1,52 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using mission8.Models;
+using System;
+using System.Diagnostics;
+using System.Linq;
 using mission8.Models;
 
-namespace mission8.Controllers;
-
-public class HomeController : Controller
+namespace Mission8.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly ILogger<HomeController> _logger;
+        private readonly Context _context;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public HomeController(ILogger<HomeController> logger, Context context)
+        {
+            _logger = logger;
+            _context = context;
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            var tasks = _context.Quadrent1s;
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(tasks);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        // Main Quadrants view
+        public IActionResult Quadrants()
+        {
+           
+                // linq
+                var quadrent1s = _context.Quadrent1s;
+                    
+                return View(quadrent1s); 
+            
+        }
     }
 }
+
+        
+           
+       
+       
+        
+    

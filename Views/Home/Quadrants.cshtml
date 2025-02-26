@@ -1,0 +1,372 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<mission8.Models.Quadrent1>
+
+@{
+    ViewData["Title"] = "Covey Time Management Matrix";
+    // Initialize as empty list if model is null
+    var safeModel = Model ?? new List<mission8.Models.Quadrent1>();
+}
+
+<div class="container-fluid py-4">
+    <h1 class="mb-4 text-center">Stephen Covey's Time Management Matrix</h1>
+    
+    <div class="mb-3">
+        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal" 
+           onclick="loadAddTaskForm()">Add New Task</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">View All Tasks</a>
+    </div>
+
+    <div class="row">
+        <!-- Header Row for Urgent/Not Urgent -->
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-4 text-center">
+                    <h3 class="bg-warning text-dark p-2 rounded">URGENT</h3>
+                </div>
+                <div class="col-4 text-center">
+                    <h3 class="bg-info text-dark p-2 rounded">NOT URGENT</h3>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+        
+        <!-- Row for Important quadrants -->
+        <div class="col-12 mb-4">
+            <div class="row">
+                <!-- Important label -->
+                <div class="col-3 d-flex align-items-center justify-content-center">
+                    <h3 class="bg-danger text-white p-3 rounded w-100 text-center">IMPORTANT</h3>
+                </div>
+                
+                <!-- Quadrant 1: Important & Urgent -->
+                <div class="col-4">
+                    <div class="card h-100 border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h4 class="mb-0">Quadrant I</h4>
+                            <p class="mb-0 small">Crises, Pressing Problems, Deadline-Driven Projects</p>
+                        </div>
+                        <div class="card-body bg-light">
+                            @if (!safeModel.Any(t => t.Quadrant == 1))
+                            {
+                                <p class="text-muted text-center">No tasks in this quadrant</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var task in safeModel.Where(t => t.Quadrant == 1))
+                                    {
+                                        <div class="list-group-item mb-2 border-left border-danger border-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-1">@task.Task</h5>
+                                                <span class="badge bg-danger text-white">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
+                                            </div>
+                                            <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div class="btn-group mt-2" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quadrant 2: Important & Not Urgent -->
+                <div class="col-4">
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Quadrant II</h4>
+                            <p class="mb-0 small">Planning, Relationship Building, Recreation</p>
+                        </div>
+                        <div class="card-body bg-light">
+                            @if (!safeModel.Any(t => t.Quadrant == 2))
+                            {
+                                <p class="text-muted text-center">No tasks in this quadrant</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var task in safeModel.Where(t => t.Quadrant == 2))
+                                    {
+                                        <div class="list-group-item mb-2 border-left border-success border-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-1">@task.Task</h5>
+                                                <span class="badge bg-success text-white">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
+                                            </div>
+                                            <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div class="btn-group mt-2" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-1"></div>
+            </div>
+        </div>
+        
+        <!-- Row for Not Important quadrants -->
+        <div class="col-12">
+            <div class="row">
+                <!-- Not Important label -->
+                <div class="col-3 d-flex align-items-center justify-content-center">
+                    <h3 class="bg-secondary text-white p-3 rounded w-100 text-center">NOT IMPORTANT</h3>
+                </div>
+                
+                <!-- Quadrant 3: Not Important & Urgent -->
+                <div class="col-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h4 class="mb-0">Quadrant III</h4>
+                            <p class="mb-0 small">Interruptions, Some Calls, Some Mail, Some Reports</p>
+                        </div>
+                        <div class="card-body bg-light">
+                            @if (!safeModel.Any(t => t.Quadrant == 3))
+                            {
+                                <p class="text-muted text-center">No tasks in this quadrant</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var task in safeModel.Where(t => t.Quadrant == 3))
+                                    {
+                                        <div class="list-group-item mb-2 border-left border-warning border-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-1">@task.Task</h5>
+                                                <span class="badge bg-warning text-dark">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
+                                            </div>
+                                            <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div class="btn-group mt-2" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quadrant 4: Not Important & Not Urgent -->
+                <div class="col-4">
+                    <div class="card h-100 border-info">
+                        <div class="card-header bg-info text-dark">
+                            <h4 class="mb-0">Quadrant IV</h4>
+                            <p class="mb-0 small">Busy Work, Time Wasters, Pleasant Activities</p>
+                        </div>
+                        <div class="card-body bg-light">
+                            @if (!safeModel.Any(t => t.Quadrant == 4))
+                            {
+                                <p class="text-muted text-center">No tasks in this quadrant</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var task in safeModel.Where(t => t.Quadrant == 4))
+                                    {
+                                        <div class="list-group-item mb-2 border-left border-info border-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-1">@task.Task</h5>
+                                                <span class="badge bg-info text-dark">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
+                                            </div>
+                                            <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div class="btn-group mt-2" role="group">
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-1"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">About the Covey Time Management Matrix</h4>
+            </div>
+            <div class="card-body">
+                <p>The Time Management Matrix was introduced by Stephen Covey in his book "The 7 Habits of Highly Effective People". 
+                   It helps prioritize tasks based on their importance and urgency.</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Quadrant I: Important & Urgent</h5>
+                        <p>Tasks that require immediate attention. While they are important, spending too much time here leads to stress and burnout.</p>
+                        <p><strong>Examples:</strong> Crises, pressing problems, deadline-driven projects</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Quadrant II: Important & Not Urgent</h5>
+                        <p>Tasks that contribute to your long-term mission and goals. This is where you should spend most of your time.</p>
+                        <p><strong>Examples:</strong> Planning, relationship building, personal development, recreation</p>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h5>Quadrant III: Not Important & Urgent</h5>
+                        <p>Tasks that appear urgent but don't contribute to your goals. These often come from others and can be delegated.</p>
+                        <p><strong>Examples:</strong> Interruptions, some calls, some meetings, popular activities</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Quadrant IV: Not Important & Not Urgent</h5>
+                        <p>Tasks that offer little to no value and should be minimized or eliminated.</p>
+                        <p><strong>Examples:</strong> Busy work, time wasters, pleasant activities, some mail, some calls</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTaskModalLabel">Add New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- The form will be loaded here via AJAX -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- The form will be loaded here via AJAX -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteTaskModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this task?</p>
+        <div id="deleteTaskDetails"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form id="deleteTaskForm" method="post">
+          <input type="hidden" id="deleteTaskId" name="id" value="" />
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    .border-3 {
+        border-width: 3px !important;
+    }
+    
+    .border-left {
+        border-left-width: 5px !important;
+    }
+    
+    .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .list-group-item {
+        transition: all 0.2s;
+    }
+    
+    .list-group-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+@section Scripts {
+  <script>
+    // Function to load the add task form into the modal
+    function loadAddTaskForm() {
+      $.get('@Url.Action("CreatePartial", "Home")', function(data) {
+        $('#addTaskModal .modal-body').html(data);
+      });
+    }
+    
+    // Function to load the edit task form into the modal
+    function loadEditTaskForm(id) {
+      $.get('@Url.Action("EditPartial", "Home")/' + id, function(data) {
+        $('#editTaskModal .modal-body').html(data);
+        $('#editTaskModal').modal('show');
+      });
+    }
+    
+    // Function to load the delete confirmation
+    function loadDeleteTaskConfirmation(id, taskName) {
+      $('#deleteTaskDetails').html('<strong>' + taskName + '</strong>');
+      $('#deleteTaskId').val(id);
+      $('#deleteTaskForm').attr('action', '@Url.Action("Delete", "Home")/' + id);
+      $('#deleteTaskModal').modal('show');
+    }
+    
+    // Function to handle form submission via AJAX
+    $(document).on('submit', '#addTaskForm, #editTaskForm', function(e) {
+      e.preventDefault();
+      
+      $.ajax({
+        url: this.action,
+        type: this.method,
+        data: $(this).serialize(),
+        success: function(result) {
+          if (result.success) {
+            // Close the modal
+            $('.modal').modal('hide');
+            // Reload the page to show updated data
+            location.reload();
+          } else {
+            // Display validation errors
+            alert('Please check your input and try again.');
+          }
+        }
+      });
+    });
+  </script>
+}
