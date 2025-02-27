@@ -9,7 +9,7 @@ public class Context: DbContext
     
     public DbSet<Quadrent1> Quadrent1s { get; set; }
     
-    public DbSet<Type> Types { get; set; }
+    public DbSet<Type> Type { get; set; }
     
 
 
