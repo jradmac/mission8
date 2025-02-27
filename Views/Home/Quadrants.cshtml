@@ -12,9 +12,7 @@
     <h1 class="mb-4 text-center">Stephen Covey's Time Management Matrix</h1>
     
     <div class="mb-3">
-        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal" 
-           onclick="loadAddTaskForm()">Add New Task</a>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">View All Tasks</a>
+        <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="AddTask">Add a Task</a>
     </div>
 
     <div class="row">
@@ -63,11 +61,18 @@
                                                 <span class="badge bg-danger text-white">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
                                             </div>
                                             <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div>Completed:
+                                                <form method="post" asp-action="ToggleComplete" asp-controller="Home">
+                                                    <input type="hidden" name="taskId" value="@task.Q1Id"/>
+                                                    <input type="checkbox" onchange="this.form.submit()" @(task.TruFalse ? "checked" : "")/>
+                                                </form>
+                                            </div>
                                             <div class="btn-group mt-2" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" 
-                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.Q1Id">Edit</a></button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <a class="btn btn-danger" asp-controller="Home" asp-action="Delete" asp-route-id="@task.Q1Id">Delete</a>
+                                                </button>
                                             </div>
                                         </div>
                                     }
@@ -100,11 +105,18 @@
                                                 <span class="badge bg-success text-white">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
                                             </div>
                                             <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div>Completed:
+                                                <form method="post" asp-action="ToggleComplete" asp-controller="Home">
+                                                    <input type="hidden" name="taskId" value="@task.Q1Id"/>
+                                                    <input type="checkbox" onchange="this.form.submit()" @(task.TruFalse ? "checked" : "")/>
+                                                </form>
+                                            </div>
                                             <div class="btn-group mt-2" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" 
-                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.Q1Id">Edit</a></button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <a class="btn btn-danger" asp-controller="Home" asp-action="Delete" asp-route-id="@task.Q1Id">Delete</a>
+                                                </button>
                                             </div>
                                         </div>
                                     }
@@ -149,11 +161,18 @@
                                                 <span class="badge bg-warning text-dark">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
                                             </div>
                                             <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div>Completed:
+                                                <form method="post" asp-action="ToggleComplete" asp-controller="Home">
+                                                    <input type="hidden" name="taskId" value="@task.Q1Id"/>
+                                                    <input type="checkbox" onchange="this.form.submit()" @(task.TruFalse ? "checked" : "")/>
+                                                </form>
+                                            </div>
                                             <div class="btn-group mt-2" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" 
-                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.Q1Id">Edit</a></button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <a class="btn btn-danger" asp-controller="Home" asp-action="Delete" asp-route-id="@task.Q1Id">Delete</a>
+                                                </button>
                                             </div>
                                         </div>
                                     }
@@ -186,11 +205,18 @@
                                                 <span class="badge bg-info text-dark">Due: @task.DataType.ToString("MM/dd/yyyy")</span>
                                             </div>
                                             <p class="mb-1">@(task.Type?.TypeName ?? "No Type")</p>
+                                            <div>Completed:
+                                                <form method="post" asp-action="ToggleComplete" asp-controller="Home">
+                                                    <input type="hidden" name="taskId" value="@task.Q1Id"/>
+                                                    <input type="checkbox" onchange="this.form.submit()" @(task.TruFalse ? "checked" : "")/>
+                                                </form>
+                                            </div>
                                             <div class="btn-group mt-2" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" 
-                                                        onclick="loadEditTaskForm(@task.Q1Id)">Edit</button>
-                                                <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="loadDeleteTaskConfirmation(@task.Q1Id, '@task.Task')">Delete</button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.Q1Id">Edit</a></button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <a class="btn btn-danger" asp-controller="Home" asp-action="Delete" asp-route-id="@task.Q1Id">Delete</a>
+                                                </button>
                                             </div>
                                         </div>
                                     }

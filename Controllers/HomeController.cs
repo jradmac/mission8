@@ -34,12 +34,76 @@ namespace Mission8.Controllers
         // Main Quadrants view
         public IActionResult Quadrants()
         {
-           
-                // linq
-                var quadrent1s = _context.Quadrent1s;
-                    
-                return View(quadrent1s); 
-            
+            var quadrantsValues = _context.Quadrent1s
+                .Include(q => q.Type) // Ensure related Type data is loaded
+                .ToList();
+
+            return View(quadrantsValues);
+        }
+
+        
+        [HttpGet]
+        public IActionResult AddTask()
+        {
+            ViewBag.Type = _context.Type.ToList();
+        
+            return View("AddTask", new Quadrent1());
+        }
+        
+        [HttpPost]
+        public IActionResult AddTask(Quadrent1 response)
+        {
+            _context.Quadrent1s.Add(response);
+            _context.SaveChanges();
+            return View("ConfirmationPage", response);
+        }
+        
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var taskRecord = _context.Quadrent1s
+                .Single(x => x.Q1Id == id);
+        
+            ViewBag.Type = _context.Type.ToList();
+            return View("AddTask", taskRecord);
+        }
+        
+        [HttpPost]
+        public IActionResult Edit(Quadrent1 updatedInfo)
+        {
+            _context.Update(updatedInfo);
+            _context.SaveChanges();
+            return RedirectToAction("Quadrants");
+        }
+        
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var recordToDelete = _context.Quadrent1s
+                .Single(x => x.Q1Id == id);
+        
+            return View(recordToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Quadrent1 deletedRecord)
+        {
+            _context.Quadrent1s.Remove(deletedRecord);
+            _context.SaveChanges();
+        
+            return RedirectToAction("Quadrants");
+        }
+        
+        [HttpPost]
+        public IActionResult ToggleComplete(int taskId)
+        {
+            var task = _context.Quadrent1s.FirstOrDefault(t => t.Q1Id == taskId);
+            if (task != null)
+            {
+                task.TruFalse = !task.TruFalse;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Quadrants");
         }
     }
 }
